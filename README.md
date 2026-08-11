@@ -30,21 +30,25 @@ specman is a method for handling that, and an [agent skill](SKILL.md) that appli
 [Adopting this in a project](process.md#adopting-this-in-a-project). The step people skip is
 pointing the project's `AGENTS.md` at it — a copy nothing references changes nothing.
 
-**As an agent skill:** the repository root is the skill directory, so it can be used by any
-agent that reads `SKILL.md` frontmatter.
+**As an agent skill:** the repository root is the skill directory — `SKILL.md` with `name`
+and `description` frontmatter — so any agent that reads that convention can use it.
+
+Clone it into your tool's skills directory:
 
 ```
-git clone https://github.com/Sajmani/specman ~/.config/cloudcode/skills/specman
+git clone https://github.com/Sajmani/specman <your-skills-dir>/specman
 ```
 
-Substitute your tool's skills directory. In CloudCode you can also register a path:
+In CloudCode you can instead point at a clone anywhere, which is easier to keep updated —
+verified working:
 
-```
-cloudcode plugin --help   # see also: skills.paths in cloudcode.json
+```jsonc
+// ~/.config/cloudcode/cloudcode.json
+{ "skills": { "paths": ["/path/to/specman"] } }
 ```
 
-Then ask for it by intent — "set up spec-driven development here", "what governs this
-project?", "resolve this conflict" — and the skill loads.
+Either way, ask for it by intent — "set up spec-driven development here", "what governs this
+project?", "resolve this conflict between requirements" — and the skill loads.
 
 ## How big should an adoption be?
 
