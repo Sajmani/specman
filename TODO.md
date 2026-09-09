@@ -344,6 +344,73 @@ What this unlocks, and what has to be worked out:
   arbitrarily. Without a rule for termination, every Goal chain climbs to "the company survives"
   and stops being useful.
 
+### Goals are what validation validates against
+
+**Added 2026-08-27, and it gives this task a job rather than a genre.** CMMI separates
+verification from validation: VER ensures "work products meet their specified requirements", VAL
+demonstrates the product "fulfills its intended use when placed in its intended environment".
+Every criterion this method writes is verification. Nothing validates.
+
+The reason nothing validates is that validation needs something to check *against*, and the
+intended use is not written down anywhere. That is precisely what a Goal is. So:
+
+> **Verification checks a requirement against the code. Validation checks a requirement against
+> its Goal.**
+
+This matters because it rescues Goals from being decorative. Rationale prose that nobody can
+fail is exactly the "adoption by gesture" this method warns about. If a Goal is what a validation
+criterion reads, it has to be stated precisely enough to be checked — which is the same standard
+already applied to requirements.
+
+CMMI has two distinct validation activities and both are relevant: **RD SP 3.5 Validate
+Requirements** asks whether these are the right requirements, and the **VAL** process area asks
+whether the built product serves its intended use. **RD SP 3.1, Establish Operational Concepts
+and Scenarios**, is the practice of writing the intended use down in the first place.
+
+#### A live instance, already in the repository
+
+`org-sec/R1` says every request produces exactly one log record, and states its own rationale:
+
+> Rationale: incident reconstruction. A request that left no trace cannot be investigated.
+
+`TestLogsEveryRequest` passes. It asserts exactly one record and that the record contains
+`path=`. R1 is verified, completely and honestly.
+
+Now read what the record actually contains — `framework.go`'s `logRequest` emits:
+
+```
+method=GET path=/hello u=<redacted>
+```
+
+**No timestamp. No status code. No latency.** You cannot reconstruct an incident from that. You
+cannot order it against an outage window, tell whether it failed, or tell whether it was slow.
+The requirement is satisfied and its stated purpose is not served, and every check in the
+repository is green.
+
+That is the whole argument for this task in one example, and it was sitting in the worked example
+unnoticed. It also lines up with the owner's original Goals chain: observability serves SLO
+assessment through latency and failure rates, and this record contains neither.
+
+#### Goals already half-exist, informally
+
+`org-sec/product.md` carries a `Rationale:` line on three of its five requirements, written
+before this task was conceived. That is a proto-Goals field arrived at by instinct. Two
+consequences: the notation partly exists and should be built on rather than replaced, and the
+coverage is already uneven — two requirements have no rationale at all, which nothing detects.
+
+#### It unifies three open items
+
+All three are the same shape — *requirement satisfied, purpose unserved*:
+
+| Open item | Read as a validation failure |
+| --- | --- |
+| This task | R1 verified; incident reconstruction impossible |
+| Task 2's OTel question | R1 verified; logs in a format nobody can aggregate, so org-wide analysis is impossible |
+| Task 2's finding 3, the scope gap | R2 verified within query parameters; the purpose — no PII in logs, ever — assured only by greeter's accidental shape |
+
+If validation criteria against Goals are the answer, one mechanism closes all three, and the OTel
+question stops being about layering and becomes about which Goal the format serves.
+
 Do this **before** task 4, since it introduces a concept and the simplification pass judges
 whether concepts earn their keep.
 
@@ -579,7 +646,8 @@ Four further findings, each with a consequence:
   product "fulfills its intended use when placed in its intended environment". Every criterion in
   `acceptance.md` is VER. **Nothing validates that a requirement was the right one to have.**
   Gate 1 is supposed to, but it is framed as review rather than as validation with its own
-  criteria, and a gate with no criteria is a conversation.
+  criteria, and a gate with no criteria is a conversation. **Followed up in task 3** — validation
+  needs a Goal to check against, which is what task 3 is for.
 - **Peer review is a first-class practice, not a nicety.** VER SG 2 is *Perform Peer Reviews*,
   with three practices under it including analyzing peer review data. This method mentions
   review constantly and never specifies it.
