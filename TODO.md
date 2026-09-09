@@ -429,7 +429,37 @@ Two halves. The second should probably run **before task 3**, because Requiremen
 a discipline with fifty years of vocabulary and it may already have a name and a shape for what
 task 3 is about to invent from scratch.
 
-### The research: how this method aligns with, and departs from, RM
+### The framing that governs this task
+
+**The goal is utility, not novelty.** Stated by the owner on 2026-08-27, and it corrects the axis
+this task was first written on — an earlier draft sorted findings into "aligned" and "different",
+and kept score on what could be claimed as new. That is the wrong question.
+
+The purpose is to use LLMs and agents to improve the practice of software engineering, by
+streamlining three things: managing requirements that arrive from multiple sources, generating
+code that satisfies them, and verifying that code against tests and other acceptance criteria
+generated from those same requirements.
+
+Two consequences for how RM gets read:
+
+- **Where RM has a good idea, take it.** Fifty years of practice outweighs a few weeks of
+  reasoning, and adopting its vocabulary makes the method teachable to people who already know
+  the discipline.
+- **Where RM has complexity or toil that exists only because humans had to do the work by hand,
+  automate it.** Much of RM's reputation for heaviness comes from clerical labor — maintaining
+  traceability matrices, chasing suspect links, re-certifying after a source changes. An agent
+  does that work for free. Humans are then spent on what they are actually for: domain
+  expertise and judgment.
+
+So the research output is not a comparison table. It is three lists: **adopt**, **automate**,
+**keep human**.
+
+This thesis is not in `process.md`. Its "Why" section argues from drift — requirements in
+someone's head cannot be checked — and never says what agents are for or what humans are for.
+That looks like a missing paragraph in the method itself, and a candidate amendment, but it is
+the owner's framing to land rather than something to insert unilaterally.
+
+### The research: what to adopt, what to automate, what stays human
 
 Starting point: <https://en.wikipedia.org/wiki/Requirements_management>. Treat it as a lead, not
 an authority — the article carries two "needs more citations" banners. The real sources it points
@@ -441,25 +471,39 @@ RM defines itself as *documenting, analyzing, tracing, prioritizing and agreeing
 then controlling change and communicating to stakeholders*, across five phases: Investigation,
 Feasibility, Design, Construction and Test, Release.
 
-Hypotheses to test, not conclusions:
+Candidates, not conclusions. Each needs checking against the primary sources before it moves.
 
-| Where it looks aligned | Note |
-| --- | --- |
-| Traceability is the core of both | `acceptance.md`'s table mapping every requirement to its criteria is RM traceability, arrived at independently |
-| Change control | `decisions.md` and `CR-###` are RM's change-request lifecycle: receive, record, analyze, implement, close |
-| Baselines | A spec tag plus a base pin is RM's "electronic baseline creation" |
-| Verification | RM names four methods — analysis, inspection, testing, demonstration. Worth checking whether this method's near-total preference for *testing* is a considered choice or a blind spot |
+**Adopt — RM has this and the method is poorer without it:**
 
-| Where it looks different | Why it matters |
+| Candidate | Why |
 | --- | --- |
-| **No elicitation.** RM starts by gathering from users, business and dev team. `context2spec` derives requirements from artifacts that already exist and never interviews anyone | The method may be a *retrofit* discipline rather than a greenfield one, and should say so |
-| **No feasibility stage at all.** RM's Feasibility phase produces a budget and a schedule | Task 3 is groping toward the value question that RM assigns to a whole phase. Read Feasibility before designing Goals |
-| **No prioritization.** It is in RM's one-sentence definition and appears nowhere in this method | Either a real gap or a deliberate omission. It is currently neither — it is an absence |
-| **Traceability points somewhere else.** RM traces a requirement back to *the person who asked for it*, to judge its value later. Here `Owner` means "who to ask for an exception" | Two different graphs called by one name. Task 3's Goals may be RM's rationale traceability |
-| **External rules are first-class.** `sources.md` pins, vendors and hash-checks terms of service, standards and licenses, with precedence tiers | **Partly answered — see below.** RM covers this more than expected, and already has vocabulary for it |
-| **Conflicts are mechanized.** RM says overriding is prevented by "constant communication among members of the development team". This method replaces the conversation with a precedence order and a written decision | The sharpest philosophical difference. Worth being able to defend |
-| **Agent-native.** RM assumes human teams and human-operated tools. This method exists because an agent will otherwise fabricate compliance — hence "a criterion must be able to fail" and "never derive a check's expected value from a run" | Probably the strongest claim to novelty, and the thing a rename should not obscure |
-| **Deliberately tool-free.** The article warns that adopting an RM tool is costly and often misdirected. This method is markdown in the repository plus the project's existing test runner | That is an answer to RM's own complaint, and should be framed as one |
+| **Prioritization** | In RM's one-sentence definition and absent here. Not currently a decision, just a hole: nothing says which requirement to satisfy first when effort is finite |
+| **Bidirectional traceability, named as such** | Forward (requirement to code to test) exists via criteria; backward exists via `// Verifies:` citations. The pair has a name and a literature; use them |
+| **Pre-requirements traceability** | RM's term for tracing a requirement to its origin and rationale. That is what task 3 is inventing. Adopt the name and see what else comes with it |
+| **The four verification methods** | analysis, inspection, testing, demonstration. This method reaches for testing almost exclusively. Some requirements — a conduct policy, a license notice — are only ever verifiable by inspection, and saying so is better than recording a permanent gap |
+| **RM's vocabulary generally** | *baseline*, *surrogate requirement*, *suspect link*, *RTM*. Free interoperability with everyone who already knows the field |
+
+**Automate — toil that exists because a human had to do it by hand:**
+
+| Toil in RM | What replaces it |
+| --- | --- |
+| **Maintaining the traceability matrix.** Famously the most-hated artifact in the discipline, hand-built and immediately stale | Derive it. Every citation is already in the code and every criterion names its requirement; `acceptance.md`'s table should be generated and checked, not typed |
+| **Chasing suspect links.** RM flags a downstream artifact when its source changes, then a human reads everything flagged | An agent reads the source diff and proposes the downstream change; the human approves it. The flag is the start of the work, not the whole of it |
+| **Elicitation as interviews.** RM's Investigation phase assumes meetings, because reading everything was infeasible | `context2spec` reads the code, the issue tracker, the docs and the vendored sources directly. Interviews remain for what is written nowhere |
+| **Transcribing external prose into numbered requirements** | Agent-drafted, human-approved. Already how this works; RM treats it as skilled manual labor |
+| **Keeping imported copies consistent** — which the literature says "must be carried out oneself" | A hash and a criterion. This is `AC-M1`, and it is free to run |
+| **The "Big Freeze"** — organizations stop developing because re-certification costs too much | If every criterion is a test, re-certification is one command. This is the strongest argument the method has and it should be made in exactly these terms |
+
+**Keep human — judgment and domain expertise, which is what people are for:**
+
+| Stays human | Why |
+| --- | --- |
+| **Both gates.** Whether the requirements are the right ones, and whether the criteria really bite | An agent that approves its own requirements has written a tautology |
+| **Conflict resolution.** The `CR-###` decision itself | An agent can surface the conflict, state the options and draft the record. Choosing which source loses is a business call |
+| **Tier assignment** | Whether a source is mandatory or advisory is a legal and commercial judgment, not a textual one |
+| **Risk acceptance** | Must be signed by someone who can be held to it, and must expire |
+| **Goals and value** | Why a requirement exists, and what it is worth. Task 3 |
+| **Retrieval an agent is refused** | Already twice today: iNaturalist and IBM both answer automated requests with a challenge or a 403. The rule that a human fetches what an agent cannot is load-bearing |
 
 Also worth settling: CMMI splits RD from REQM. `context2spec` looks like RD and everything after
 it looks like REQM. If that mapping holds it is a better spine for the phases than the current
@@ -487,8 +531,9 @@ literature says the burden of keeping version and format consistent "must be car
 oneself" — which is a fair description of what `sources.md` and `PROVENANCE.md` are for.
 
 So the honest position is **not** that this method invented external-source management. It
-reinvented a chunk of it. What still looks genuinely different is narrower and worth defending
-precisely:
+reinvented a chunk of it — which, under the utility framing above, is fine: the question is
+whether the mechanism works, not who got there first. Four things it does that RM does not, each
+worth keeping for a stated reason rather than for being new:
 
 - **Cryptographic integrity, not just a snapshot.** An RM baseline freezes a copy *inside the
   tool's database* and detects that someone edited a requirement object. A recorded SHA-256
