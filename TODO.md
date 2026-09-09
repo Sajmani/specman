@@ -8,7 +8,7 @@ pick up on another machine by cloning. Work spans seven repositories, all with r
 | Repo | Remote | State |
 | --- | --- | --- |
 | `specman` | `github.com/Sajmani/specman` (public) | The method. `process.md` at pin `a1325d53`, six amendments landed |
-| `gemini-cli` | **`backup` →** `github.com/Sajmani/gemini-cli` (private) | Branch **`spec-adoption`**. `origin` is Google's repo — do not push there |
+| `gemini-cli` | **`backup` →** `github.com/Sajmani/gemini-cli` (private) | Branch **`spec-adoption`**. `origin` is Google's repo — do not push there. Two `[LOCAL]` amendments staged |
 | `birdsync` | `github.com/Sajmani/birdsync` (public) | Synced to `a1325d53` + banner; carries a `specman` manifest entry |
 | `org-sec` | `github.com/Sajmani/org-sec` (private) | Example: spec-only repo. Tags `v1.0` `v1.1` |
 | `server-framework` | `github.com/Sajmani/server-framework` (private) | Example: framework. Tags `v1.10` `v1.11` predate the stale-pin fix on `main` |
@@ -50,10 +50,13 @@ diff -u process.md ../birdsync/spec/process.md     # banner only
 - Go on this machine needs `-ldflags=-linkmode=external` or tests abort with
   `missing LC_UUID` (go1.22.4 vs the macOS 26 linker).
 
-**Blocking item parked in gemini-cli:** `CR-001` in `gemini-cli/spec/decisions.md` has no expiry
-or review date, so it is not yet a valid risk acceptance — and `wcag` is a mandatory source, so
-that record is the only thing between the project and "work stops". Two dates from the owner
-closes it. Full list in `gemini-cli/spec/TODO.md`.
+**The gemini-cli blocking item is closed.** `CR-001` waited two days on an expiry and a review
+date that turned out to be unfillable: a risk acceptance asserts a choice, and this adoption can
+neither fix gemini-cli's themes nor accept the risk for its users. `CR-002` supersedes it with
+*adopted, measured, not actionable here*, and a **sixth `[LOCAL]` amendment is now staged** — a
+third exit from an unsatisfiable mandatory requirement, for an adopter with no authority to act.
+That was the second occurrence `sources.md` had been waiting for. Remaining gemini-cli items are
+in `gemini-cli/spec/TODO.md`; the largest is four sources named but never retrieved.
 
 **Standing checks, by repo**, for a machine that has just cloned:
 
