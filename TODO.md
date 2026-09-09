@@ -2,24 +2,35 @@
 
 ## Resuming — read this first
 
-Updated 2026-08-27. Work spans six sibling repositories. Nothing is lost if a session ends:
-everything below is on disk, though **none of it is committed**.
+Updated 2026-08-27, end of session. **Everything is committed and pushed** — this is safe to
+pick up on another machine by cloning. Work spans seven repositories, all with remotes.
 
-| Repo | State | Committed? |
+| Repo | Remote | State |
 | --- | --- | --- |
-| `specman` | The method. `process.md` at pin `919563cd`, five amendments landed | `process.md` **modified**, `TODO.md` **untracked** |
-| `gemini-cli` | Synced to `919563cd` + banner + one staged `[LOCAL]` amendment | `spec/` **untracked**; `GEMINI.md`, `.prettierignore` modified |
-| `birdsync` | Synced to `919563cd` + banner; gained a `specman` manifest entry | `spec/process.md`, `spec/sources.md` **modified** |
-| `org-sec` | Example: spec-only repo | Committed, tagged `v1.0` `v1.1` |
-| `server-framework` | Example: framework. Stale pin fixed, `acceptance.md` added | **Modified, uncommitted** — tags `v1.10` `v1.11` predate the fix |
-| `greeter` | Example: the app. `acceptance.md` added | **Modified, uncommitted** — tags `v1.20` `v1.21` predate it |
+| `specman` | `github.com/Sajmani/specman` (public) | The method. `process.md` at pin `a1325d53`, six amendments landed |
+| `gemini-cli` | **`backup` →** `github.com/Sajmani/gemini-cli` (private) | Branch **`spec-adoption`**. `origin` is Google's repo — do not push there |
+| `birdsync` | `github.com/Sajmani/birdsync` (public) | Synced to `a1325d53` + banner; carries a `specman` manifest entry |
+| `org-sec` | `github.com/Sajmani/org-sec` (private) | Example: spec-only repo. Tags `v1.0` `v1.1` |
+| `server-framework` | `github.com/Sajmani/server-framework` (private) | Example: framework. Tags `v1.10` `v1.11` predate the stale-pin fix on `main` |
+| `greeter` | `github.com/Sajmani/greeter` (private) | Example: the app. Tags `v1.20` `v1.21` predate `acceptance.md` |
+| `goals` | `sso://user/sameer/goals` (internal) | 2021 Graphviz goal-graph explorer. Relevant to task 3 — see below |
 
-**Task 1 is done.** Next action is **task 7's research half** — locating this method inside the
-Requirements Management discipline — because it may already have vocabulary for what task 3 is
-about to invent. Then task 3 (Goals), which task 4 depends on. Task 2's remaining work is the
-OTel layering question and two unresolved findings.
+**Task 1 is done**, and task 7's research has had two passes. **Next action is task 3 (Goals)**,
+which now has a job rather than a genre: *verification checks a requirement against the code;
+validation checks a requirement against its Goal*. There is a worked failure already in the
+repository — `org-sec/R1` is verified by a green test while its own stated rationale, incident
+reconstruction, is unachievable from the record the framework emits. Read task 3 before task 4.
 
-**The canonical pin is `sha256:919563cd…`.** Two project copies record it. A project copy is
+Two things a new machine should know that are not in any repo:
+
+- **`goals`** (internal) holds `devex.dot`, a 113-node requirement-to-outcome graph from 2021,
+  and `roi.dot`, a generic outcome taxonomy. Both bear directly on task 3's open question of how
+  far up a Goal chain to go. Worth reading before designing Goals from scratch.
+- Still unread for task 7: **ISO/IEC/IEEE 29148**, the **IREB CPRE syllabus**, **PMI's practice
+  guide**, and **Gotel & Finkelstein 1994**. The CMMI findings came from process-area summaries,
+  not the SEI technical report — verify before quoting as normative.
+
+**The canonical pin is `sha256:a1325d53…`.** Two project copies record it. A project copy is
 never byte-identical to canonical — it carries a banner — so the check is that the diff contains
 *the banner and nothing else but `[LOCAL]` rows*:
 
@@ -44,9 +55,21 @@ or review date, so it is not yet a valid risk acceptance — and `wcag` is a man
 that record is the only thing between the project and "work stops". Two dates from the owner
 closes it. Full list in `gemini-cli/spec/TODO.md`.
 
+**Standing checks, by repo**, for a machine that has just cloned:
+
+```bash
+# specman            (no checks; prose only)
+# birdsync           gofmt -l . && go build ./... && go vet ./... && go test ./...
+# server-framework   go build ./... && go vet ./... && go test -ldflags=-linkmode=external ./...
+# greeter            same as server-framework
+# gemini-cli         python3 spec/check-pins.py && python3 spec/check-quotations.py
+#                    npx prettier@3.5.3 --check "spec/**/*.md"
+```
+
 Sessions of record for provenance: `ses_fc5410b4effe1MMYZpTO63UgOz` (2026-08-25/26, the
 adoption and the worked example) and `ses_e5fbd2501adffec0u7ckMN5M7V` (2026-08-27, task 1 and
-the stale-pin fix). The `grill-me` skill exists now, and task 3 is the one that most needs it.
+the stale-pin fix, the reqman/RM research, and the agent-versus-human division in `Why`). The
+`grill-me` skill exists now, and task 3 is the one that most needs it.
 
 Working plan for evolving the method. Tasks are ordered by dependency: each one's output is the
 next one's input.
