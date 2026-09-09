@@ -14,8 +14,10 @@ everything below is on disk, though **none of it is committed**.
 | `server-framework` | Example: framework. Stale pin fixed, `acceptance.md` added | **Modified, uncommitted** — tags `v1.10` `v1.11` predate the fix |
 | `greeter` | Example: the app. `acceptance.md` added | **Modified, uncommitted** — tags `v1.20` `v1.21` predate it |
 
-**Task 1 is done.** Next action is **task 3** (Goals), which task 4 depends on. Task 2's
-remaining work is the OTel layering question and two unresolved findings.
+**Task 1 is done.** Next action is **task 7's research half** — locating this method inside the
+Requirements Management discipline — because it may already have vocabulary for what task 3 is
+about to invent. Then task 3 (Goals), which task 4 depends on. Task 2's remaining work is the
+OTel layering question and two unresolved findings.
 
 **The canonical pin is `sha256:919563cd…`.** Two project copies record it. A project copy is
 never byte-identical to canonical — it carries a banner — so the check is that the diff contains
@@ -420,3 +422,73 @@ To work out:
   discharge the requirement, and the residue needs its own record.
 - How this lands in the bundle: a dated migration plan that lets `CR-001` expire against
   something real, rather than a risk acceptance renewed indefinitely.
+
+## 7. Rename to `reqman`, and locate the method in Requirements Management
+
+Two halves. The second should probably run **before task 3**, because Requirements Management is
+a discipline with fifty years of vocabulary and it may already have a name and a shape for what
+task 3 is about to invent from scratch.
+
+### The research: how this method aligns with, and departs from, RM
+
+Starting point: <https://en.wikipedia.org/wiki/Requirements_management>. Treat it as a lead, not
+an authority — the article carries two "needs more citations" banners. The real sources it points
+at are CMMI's split between **Requirements Development (RD)** and **Requirements Management
+(REQM)**, IREB, PMI's *Requirements Management — A Practice Guide*, and Gotel & Finkelstein's
+1994 "An Analysis of the Requirements Traceability Problem".
+
+RM defines itself as *documenting, analyzing, tracing, prioritizing and agreeing on requirements,
+then controlling change and communicating to stakeholders*, across five phases: Investigation,
+Feasibility, Design, Construction and Test, Release.
+
+Hypotheses to test, not conclusions:
+
+| Where it looks aligned | Note |
+| --- | --- |
+| Traceability is the core of both | `acceptance.md`'s table mapping every requirement to its criteria is RM traceability, arrived at independently |
+| Change control | `decisions.md` and `CR-###` are RM's change-request lifecycle: receive, record, analyze, implement, close |
+| Baselines | A spec tag plus a base pin is RM's "electronic baseline creation" |
+| Verification | RM names four methods — analysis, inspection, testing, demonstration. Worth checking whether this method's near-total preference for *testing* is a considered choice or a blind spot |
+
+| Where it looks different | Why it matters |
+| --- | --- |
+| **No elicitation.** RM starts by gathering from users, business and dev team. `context2spec` derives requirements from artifacts that already exist and never interviews anyone | The method may be a *retrofit* discipline rather than a greenfield one, and should say so |
+| **No feasibility stage at all.** RM's Feasibility phase produces a budget and a schedule | Task 3 is groping toward the value question that RM assigns to a whole phase. Read Feasibility before designing Goals |
+| **No prioritization.** It is in RM's one-sentence definition and appears nowhere in this method | Either a real gap or a deliberate omission. It is currently neither — it is an absence |
+| **Traceability points somewhere else.** RM traces a requirement back to *the person who asked for it*, to judge its value later. Here `Owner` means "who to ask for an exception" | Two different graphs called by one name. Task 3's Goals may be RM's rationale traceability |
+| **External rules are first-class.** `sources.md` pins, vendors and hash-checks terms of service, standards and licenses, with precedence tiers | Closer to compliance management than to classical RM. Check whether RM literature covers imported requirements at all |
+| **Conflicts are mechanized.** RM says overriding is prevented by "constant communication among members of the development team". This method replaces the conversation with a precedence order and a written decision | The sharpest philosophical difference. Worth being able to defend |
+| **Agent-native.** RM assumes human teams and human-operated tools. This method exists because an agent will otherwise fabricate compliance — hence "a criterion must be able to fail" and "never derive a check's expected value from a run" | Probably the strongest claim to novelty, and the thing a rename should not obscure |
+| **Deliberately tool-free.** The article warns that adopting an RM tool is costly and often misdirected. This method is markdown in the repository plus the project's existing test runner | That is an answer to RM's own complaint, and should be framed as one |
+
+Also worth settling: CMMI splits RD from REQM. `context2spec` looks like RD and everything after
+it looks like REQM. If that mapping holds it is a better spine for the phases than the current
+three-part loop, and it comes with existing literature attached.
+
+### The rename: `specman` → `reqman`
+
+Short for *requirements manager*. Adopting the name is a claim of lineage, so do the research
+first: it inherits the discipline's expectations, and readers will arrive expecting elicitation,
+prioritization and baselines. Two arguments to weigh against it — the bundle is broader than
+requirements (`arch.md` and `implements.md` are descriptive, not requirements at all), and
+"prioritizing" is in RM's definition while being absent here.
+
+The mechanical scope is smaller than it looks, because **canonical `process.md` never names
+itself** — zero occurrences. So the base pin does not change and both project copies stay valid.
+
+| Where | Occurrences | Note |
+| --- | --- | --- |
+| `README.md`, `SKILL.md`, `TODO.md` | 4 each | `SKILL.md` needs its `name:` and its trigger description reworded |
+| `gemini-cli/spec/sources.md` | 5 | The source entry name, its heading, and the Origin URL |
+| `birdsync/spec/sources.md` | 2 | Same |
+| Both copies' `process.md` | 2 each | Banner only — the canonical URL and the `#specman--…` anchor the banner links to |
+| `process.md` (canonical) | **0** | Nothing to change; the pin survives |
+
+Two practical notes. Renaming the GitHub repository leaves a redirect, so
+`github.com/Sajmani/specman` keeps resolving and existing provenance citations do not break —
+but they should still be updated, since a redirect is not a record. And the skill is registered
+by directory path, so renaming the directory de-registers it until it is re-installed.
+
+Open: whether the artifact directory stays `spec/`. Renaming it to `req/` touches every project,
+every criterion path and every cross-reference, for no benefit yet identified. Default is to
+leave it.
