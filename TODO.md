@@ -456,7 +456,7 @@ Hypotheses to test, not conclusions:
 | **No feasibility stage at all.** RM's Feasibility phase produces a budget and a schedule | Task 3 is groping toward the value question that RM assigns to a whole phase. Read Feasibility before designing Goals |
 | **No prioritization.** It is in RM's one-sentence definition and appears nowhere in this method | Either a real gap or a deliberate omission. It is currently neither — it is an absence |
 | **Traceability points somewhere else.** RM traces a requirement back to *the person who asked for it*, to judge its value later. Here `Owner` means "who to ask for an exception" | Two different graphs called by one name. Task 3's Goals may be RM's rationale traceability |
-| **External rules are first-class.** `sources.md` pins, vendors and hash-checks terms of service, standards and licenses, with precedence tiers | Closer to compliance management than to classical RM. Check whether RM literature covers imported requirements at all |
+| **External rules are first-class.** `sources.md` pins, vendors and hash-checks terms of service, standards and licenses, with precedence tiers | **Partly answered — see below.** RM covers this more than expected, and already has vocabulary for it |
 | **Conflicts are mechanized.** RM says overriding is prevented by "constant communication among members of the development team". This method replaces the conversation with a precedence order and a written decision | The sharpest philosophical difference. Worth being able to defend |
 | **Agent-native.** RM assumes human teams and human-operated tools. This method exists because an agent will otherwise fabricate compliance — hence "a criterion must be able to fail" and "never derive a check's expected value from a run" | Probably the strongest claim to novelty, and the thing a rename should not obscure |
 | **Deliberately tool-free.** The article warns that adopting an RM tool is costly and often misdirected. This method is markdown in the repository plus the project's existing test runner | That is an answer to RM's own complaint, and should be framed as one |
@@ -464,6 +464,54 @@ Hypotheses to test, not conclusions:
 Also worth settling: CMMI splits RD from REQM. `context2spec` looks like RD and everything after
 it looks like REQM. If that mapping holds it is a better spine for the phases than the current
 three-part loop, and it comes with existing literature attached.
+
+#### First pass, 2026-08-27: does RM cover versioned external sources?
+
+**Yes — more than expected, and it has names for things this method invented independently.**
+Checked against the Requirements traceability and Traceability matrix articles, both read in
+full. Terms worth searching on later: *baseline*, *surrogate requirement*, *suspect link*,
+*pre-requirements traceability*, *requirements traceability matrix (RTM)*.
+
+Four concepts map almost directly:
+
+| RM concept | The equivalent here |
+| --- | --- |
+| **Baseline** — an immutable approved snapshot; an RTM correlates "any two *baselined documents*", so that "when an item is changed in one baselined document, it is easy to see what needs to be changed in the other" | A spec tag, and a source pin in `PROVENANCE.md` |
+| **Surrogate requirement** — RM tools import an external artifact so it can be traced with the tool's own machinery | Vendoring a source into `sources/<name>/` and transcribing it to `<name>/R#` |
+| **Outdated surrogates** — named explicitly as the risk that the imported copy drifts from its origin | Exactly the stale `org-sec` pin fixed on 2026-08-27, and the reason `AC-M1` exists |
+| **Suspect link** — when an upstream item changes, downstream links are flagged for re-verification | The framework's coverage check going red when `org-sec` moved to v1.1 |
+
+External sources are squarely in scope for RM: traceability is *prescribed* by DO-178C, ISO
+26262 and IEC 61508, which are themselves external standards. And on importing them, the
+literature says the burden of keeping version and format consistent "must be carried out
+oneself" — which is a fair description of what `sources.md` and `PROVENANCE.md` are for.
+
+So the honest position is **not** that this method invented external-source management. It
+reinvented a chunk of it. What still looks genuinely different is narrower and worth defending
+precisely:
+
+- **Cryptographic integrity, not just a snapshot.** An RM baseline freezes a copy *inside the
+  tool's database* and detects that someone edited a requirement object. A recorded SHA-256
+  detects that the stored bytes no longer match what was recorded *for any reason* — including
+  a formatter silently rewriting the file, which is the failure that produced amendment 1.
+- **Quotation checking.** Nothing found so far in RM verifies that a quoted passage still
+  appears *verbatim* in the source document. RM traces requirement-to-requirement links, not
+  requirement-to-literal-text. `check-quotations.py` has no counterpart yet identified.
+- **Precedence among sources.** RM resolves conflicting requirements through a change control
+  board and communication. Tiers declare, in advance and in writing, which source outranks which.
+- **The tool-free answer to a documented pathology.** RM literature records the "Big Freeze":
+  organizations stop developing because re-certification costs too much. This method's bet is
+  that a refresh is cheap when the check is a test, so the freeze never sets in. That is a
+  direct response to a named failure and should be framed as one.
+
+Not yet verified: the IBM DOORS documentation on suspect links and baselining external standard
+modules returned 403 to automated retrieval, so the DOORS specifics above come from secondary
+description only. Retrieve them by hand before relying on the detail — the method's own rule
+about a human fetching what an agent cannot applies here.
+
+Still open after this pass: whether RM has any notion of a source that is *implemented* rather
+than merely complied with — the `org-sec` case from task 2 — and whether ISO/IEC/IEEE 29148
+covers imported requirements more directly than the traceability literature does.
 
 ### The rename: `specman` → `reqman`
 
@@ -489,6 +537,24 @@ Two practical notes. Renaming the GitHub repository leaves a redirect, so
 but they should still be updated, since a redirect is not a record. And the skill is registered
 by directory path, so renaming the directory de-registers it until it is re-installed.
 
-Open: whether the artifact directory stays `spec/`. Renaming it to `req/` touches every project,
-every criterion path and every cross-reference, for no benefit yet identified. Default is to
-leave it.
+**The artifact directory becomes `reqs/`.** Decided 2026-08-27, reversing the "leave it" default
+recorded earlier the same day. `spec/` names the wrong thing once the method is called reqman —
+and it was already the wrong name, since the directory holds sources, decisions, criteria and
+conformance records, not a specification.
+
+This is the expensive half of the rename, and unlike the rest of it the cost is real:
+
+- Every project moves `spec/` to `reqs/` — currently gemini-cli and birdsync, plus the three
+  task 2 examples.
+- Canonical `process.md` says `spec/` throughout, so **this one does change the base pin**, and
+  both project copies need re-pinning afterwards. The rest of the rename does not.
+- Every criterion that reads a path moves with it: `check-pins.py`, `check-quotations.py`,
+  `check-contrast.py`, and `spec_test.go`'s `sourcesDir`/`sourcesManifest` constants.
+- `spec/process.md` is named in both `.prettierignore` and gemini-cli's `GEMINI.md`, and in the
+  banner link in each copy.
+- The three-phase names `context2spec`, `spec2test`, `spec2code` embed "spec" too. Renaming the
+  directory without renaming the loop leaves the vocabulary half-migrated — decide both together
+  or neither.
+
+Sequence it after the research and after task 4's simplification pass, so the text is only
+rewritten once.
