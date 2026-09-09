@@ -558,6 +558,48 @@ Still open after this pass: whether RM has any notion of a source that is *imple
 than merely complied with — the `org-sec` case from task 2 — and whether ISO/IEC/IEEE 29148
 covers imported requirements more directly than the traceability literature does.
 
+#### Second pass, 2026-08-27: CMMI REQM is a closer fit than the overview suggested
+
+Read the CMMI process-area definitions. **REQM has exactly five specific practices, and four of
+them already exist here under other names.** This is the best available spine for describing
+what the method does, and it should probably replace the ad-hoc phase vocabulary.
+
+| CMMI REQM practice | What it is here |
+| --- | --- |
+| SP 1.1 Understand Requirements | `context2spec`; the transcription of a vendored source into `<name>/R#` |
+| SP 1.2 **Obtain Commitment to Requirements** | **The weak one.** `Owner` records who to ask for an exception; approval authority records who signs. Neither is an act of *commitment* by the people who have to deliver |
+| SP 1.3 Manage Requirements Changes | `decisions.md`, `CR-###`, and the source-refresh cycle |
+| SP 1.4 Maintain **Bidirectional** Traceability | `acceptance.md`'s table forward, `// Verifies:` citations backward. Arrived at independently, both directions present |
+| SP 1.5 **Ensure Alignment Between Project Work and Requirements** | `implements.md`, almost exactly. Worth noting that CMMI made this a named practice and this method reinvented it as an artifact |
+
+Four further findings, each with a consequence:
+
+- **Verification and validation are different things, and only one is done here.** CMMI splits
+  them: VER ensures "work products meet their specified requirements"; VAL demonstrates the
+  product "fulfills its intended use when placed in its intended environment". Every criterion in
+  `acceptance.md` is VER. **Nothing validates that a requirement was the right one to have.**
+  Gate 1 is supposed to, but it is framed as review rather than as validation with its own
+  criteria, and a gate with no criteria is a conversation.
+- **Peer review is a first-class practice, not a nicety.** VER SG 2 is *Perform Peer Reviews*,
+  with three practices under it including analyzing peer review data. This method mentions
+  review constantly and never specifies it.
+- **Baselines and integrity are Configuration Management, not requirements work.** CM SP 1.3
+  is *Create or Release Baselines* and CM SG 3 is *Establish Integrity*, including *Perform
+  Configuration Audits*. So the pin, the hash and `AC-M1` are CM in CMMI's taxonomy. Useful for
+  explaining the method to anyone who already thinks in these terms, and mild evidence that
+  `sources.md` is doing two jobs that could be named separately.
+- **REQM is Maturity Level 2 and RD is Maturity Level 3.** CMMI says you manage requirements
+  before you get good at developing them, and files REQM under Project Management while RD is
+  Engineering. That ordering is the reverse of how this method grew, and it is an argument for
+  the rename: the mature, basic, do-this-first discipline is the one called *management*.
+
+Prioritization has a home too: **RD SP 3.4, "Analyze Requirements to Achieve Balance"**. So the
+gap identified in the adopt list is a named practice with literature behind it, not an invention.
+
+Not yet read: ISO/IEC/IEEE 29148, the IREB CPRE syllabus, PMI's practice guide, and Gotel &
+Finkelstein 1994. The CMMI material above is from the process-area summaries, not the CMU/SEI
+technical report itself (CMU/SEI-2010-TR-033) — read that before quoting any of it as normative.
+
 ### The rename: `specman` → `reqman`
 
 Short for *requirements manager*. Adopting the name is a claim of lineage, so do the research
