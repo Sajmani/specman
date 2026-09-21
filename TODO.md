@@ -7,17 +7,19 @@ pick up on another machine by cloning. Work spans seven repositories, all with r
 
 | Repo | Remote | State |
 | --- | --- | --- |
-| `specman` | `github.com/Sajmani/specman` (public) | The method. `process.md` at pin `a1325d53`, six amendments landed |
-| `gemini-cli` | **`backup` →** `github.com/Sajmani/gemini-cli` (private) | Branch **`spec-adoption`**. `origin` is Google's repo — do not push there. Two `[LOCAL]` amendments staged |
+| `specman` | `github.com/Sajmani/specman` (public) | The method. `process.md` at pin `fe276283`, nine amendments landed, simplification pass done |
+| `gemini-cli` | **`backup` →** `github.com/Sajmani/gemini-cli` (private) | Branch **`spec-adoption`**. `origin` is Google's repo — do not push there. Nothing staged |
 | `birdsync` | `github.com/Sajmani/birdsync` (public) | Synced to `a1325d53` + banner; carries a `specman` manifest entry |
 | `org-sec` | `github.com/Sajmani/org-sec` (private) | Example: spec-only repo. Tags `v1.0` `v1.1` |
 | `server-framework` | `github.com/Sajmani/server-framework` (private) | Example: framework. Tags `v1.10` `v1.11` predate the stale-pin fix on `main` |
 | `greeter` | `github.com/Sajmani/greeter` (private) | Example: the app. Tags `v1.20` `v1.21` predate `acceptance.md` |
 | `goals` | `sso://user/sameer/goals` (internal) | 2021 Graphviz goal-graph explorer. Relevant to task 3 — see below |
 
-**Tasks 1 and 3 are done**, and task 7's research has had two passes. **Next action is task 4**,
-the simplification pass — `process.md` has grown a lot today and three `[LOCAL]` amendments are
-staged in gemini-cli awaiting upstream. Task 2's remaining work is the OTel layering question.
+**Tasks 1, 3 and 4 are done**, and task 7's research has had two passes. Canonical is at pin
+`fe276283` with **nothing staged anywhere** — both project copies differ from it by exactly their
+banner. **Next action is task 5** (take the revised method back to birdsync), which is also the
+first real test of amendment 5, the only one that landed without evidence. Task 2's remaining
+work is the OTel layering question.
 
 Task 3 landed as structure only: `goals.md`, a `Goals:` field, and a coverage check. Its main
 finding is a correction — goals are OKR *objectives*, so they are unmeasurable by construction
@@ -33,12 +35,12 @@ Two things a new machine should know that are not in any repo:
   guide**, and **Gotel & Finkelstein 1994**. The CMMI findings came from process-area summaries,
   not the SEI technical report — verify before quoting as normative.
 
-**The canonical pin is `sha256:a1325d53…`.** Two project copies record it. A project copy is
+**The canonical pin is `sha256:fe276283…`.** Two project copies record it. A project copy is
 never byte-identical to canonical — it carries a banner — so the check is that the diff contains
 *the banner and nothing else but `[LOCAL]` rows*:
 
 ```bash
-diff -u process.md ../gemini-cli/spec/process.md   # banner + 1 staged amendment
+diff -u process.md ../gemini-cli/spec/process.md   # banner only
 diff -u process.md ../birdsync/spec/process.md     # banner only
 ```
 
@@ -496,7 +498,49 @@ question stops being about layering and becomes about which Goal the format serv
 Do this **before** task 4, since it introduces a concept and the simplification pass judges
 whether concepts earn their keep.
 
-## 4. Simplification pass
+## 4. Simplification pass — **DONE 2026-08-27**, with deletion candidates left for you
+
+Ran after landing the three staged amendments, so there was one text to simplify rather than a
+moving base. **Nothing is staged in any project copy now**; both differ from canonical by exactly
+their banner.
+
+What the pass actually found, which was not what the task predicted:
+
+| Predicted | Found |
+| --- | --- |
+| Redundancy between decoupling, drift control and risk acceptance | **One** genuine mutual duplication: decoupling and unsatisfiable-mandatory each argued that decoupling does not soften tier severity, each linking to the other while restating it. Fixed — the latter owns it |
+| A revision log narrating incidents | **Confirmed, and it was this session's fault.** Today's nine rows averaged 900 characters against the originals' 327. Rewritten to the established form and 42% shorter; the log fell from 15% of the document to 11%. Every `Exercised:` clause survived |
+| Concepts introduced but never used | Two small ones, below. Both are judgment calls |
+| General redundancy | **Largely absent.** A near-duplicate scan over every sentence found one pair, and it was a revision row restating its own body text. The document grew by *addition*, not repetition, so the remaining ~1,045 lines are real content |
+
+### The rule the pass produced
+
+A revision row states **what changed, the evidence, and how well it has been exercised.** The
+mechanism lives in the body, once. The 2026-08-09 entries already modelled this; the day's
+entries had drifted into re-explaining themselves, which is how a log doubles without adding
+information.
+
+### Deletion candidates — not deleted, because they are yours to judge
+
+- **The `waived` criterion status.** Defined once, used by no project, and it overlaps risk
+  acceptance: a waived criterion and an accepted risk are the same act recorded at two different
+  levels. Either delete it or say how it differs.
+- **The orphan sweep.** Named as a drift defense and never run anywhere. Now partly superseded —
+  `check-goals.py` and `AC-M1` are orphan sweeps for their own domains, which suggests the
+  general practice should be restated as "write one per relation" rather than left as advice.
+
+### Not addressed
+
+The word **gap** does four jobs: a requirement with no criterion, a requirement the code does not
+satisfy, a mandatory requirement that cannot be satisfied, and a criterion whose status is `gap`.
+Eight sections use it. Naming them apart would clarify, but it adds vocabulary, and a
+simplification pass is the wrong place to do that.
+
+---
+
+**Original task text follows.**
+
+## 4b. Simplification pass — original notes
 
 `process.md` has grown by roughly 95 lines without anything being removed. Look for:
 
