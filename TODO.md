@@ -15,11 +15,14 @@ pick up on another machine by cloning. Work spans seven repositories, all with r
 | `greeter` | `github.com/Sajmani/greeter` (private) | Example: the app. Tags `v1.20` `v1.21` predate `acceptance.md` |
 | `goals` | `sso://user/sameer/goals` (internal) | 2021 Graphviz goal-graph explorer. Relevant to task 3 — see below |
 
-**Task 1 is done**, and task 7's research has had two passes. **Next action is task 3 (Goals)**,
-which now has a job rather than a genre: *verification checks a requirement against the code;
-validation checks a requirement against its Goal*. There is a worked failure already in the
-repository — `org-sec/R1` is verified by a green test while its own stated rationale, incident
-reconstruction, is unachievable from the record the framework emits. Read task 3 before task 4.
+**Tasks 1 and 3 are done**, and task 7's research has had two passes. **Next action is task 4**,
+the simplification pass — `process.md` has grown a lot today and three `[LOCAL]` amendments are
+staged in gemini-cli awaiting upstream. Task 2's remaining work is the OTel layering question.
+
+Task 3 landed as structure only: `goals.md`, a `Goals:` field, and a coverage check. Its main
+finding is a correction — goals are OKR *objectives*, so they are unmeasurable by construction
+and **no criterion can check a requirement against its goal**. Structure is mechanical; substance
+is Gate 1. `org-sec/R1` is the standing example of the difference.
 
 Two things a new machine should know that are not in any repo:
 
@@ -326,7 +329,60 @@ obvious candidate, and it would sit in the same place the PII one does.
   v1.0/v1.1 rot lived in a paragraph. Whether this is fixable or just a known limit is worth a
   paragraph in the method.
 
-## 3. Goals: why a requirement exists
+## 3. Goals: why a requirement exists — **DONE 2026-08-27** (structure), criteria deferred
+
+Built as `goals.md` plus a `Goals:` field, staged as a `[LOCAL]` amendment in gemini-cli and
+exercised in `org-sec v1.2`. What landed, and what the design settled:
+
+| Question the task recorded as open | Settled as |
+| --- | --- |
+| Which artifact holds them | A separate `goals.md`. Shared like `product.md`, so it survives one-spec-several-codebases |
+| Are Goals normative | Normative, but held to the opposite standard from a requirement — see below |
+| How far up the chain to go | **Dissolved.** A goal is an OKR *objective*: directional, aspirational, deliberately unmeasurable. There is no chain to terminate, because goals do not decompose into more goals |
+| One requirement, several goals | Many-to-many, carried only by the citation. A goal never lists its requirements, so the two files cannot drift |
+
+`org-sec v1.2` has three goals and four citing requirements, with `R3` serving both `G2` and
+`G3` and `G2` served by `R2`, `R3` and `V1` — both directions of the many-to-many exercised.
+`check-goals.py` enforces three structural rules, each watched failing: a requirement citing no
+goal, a citation that does not resolve, a goal nothing cites.
+
+### The correction this forced
+
+The "Goals are what validation validates against" framing below was written earlier the same day
+and is **half wrong**, kept here because the correction is the finding.
+
+Goals being unmeasurable is not an oversight to engineer around — it is what distinguishes an
+objective from a requirement. So **no criterion can check a requirement against its goal.** What
+is mechanical is structure: citation coverage, resolution, and reverse coverage. What is not is
+substance, and that belongs to Gate 1.
+
+This is the agent/human division from `Why` landing on its first real case. The agent checks
+that every requirement is justified by something and every intention is pursued by something.
+The human reads the goal beside the requirement and asks whether one actually serves the other.
+`org-sec/R1` is the standing example: verified by a passing test, and its stated purpose
+unachievable from the record the implementation emits. **That was found by reading, not by
+running, and it always will be.**
+
+### Left undone, deliberately
+
+- **Validation criteria.** Deferred by decision, not oversight. Structure first; whether anything
+  useful can be automated around goals is a later question.
+- **No goals in gemini-cli.** It has no `product.md`, so nothing there cites a goal. The
+  amendment is exercised in one project only, and the staging table says so.
+- **Untested against a source whose goals someone else sets.** A vendored standard states its own
+  purposes; whether an adopter restates them, cites them, or ignores them is unexamined.
+- **Nothing tells a consumer that a source moved.** `org-sec` went to `v1.2` and
+  `server-framework` stayed green, correctly — the pin protects the vendored copy against
+  drifting from its record, not against upstream changing. Refresh is cadence-driven. This is
+  RM's *suspect link* in miniature, and it is unbuilt.
+- **The versioning rule did not cover this change.** Adding goals neither adds nor tightens a
+  requirement, so the minor-bump rule had nothing to say. `v1.2` states the resolution: any
+  change to `product.md` takes a new version, because consumers pin by hash and two byte-streams
+  must not both claim to be `v1.1`. That belongs in canonical eventually.
+
+---
+
+**Original task text follows, for the reasoning that produced the above.**
 
 **New, not yet designed.** A requirement states *what* must be true. Nothing in the method
 records *why*, and the omission is doing real damage in the task 2 example: `org-sec` says every
