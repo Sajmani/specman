@@ -657,13 +657,72 @@ To work out:
 ## 7. Rename to `river`, and locate the method in Requirements Management
 
 **Name changed 2026-09-23: `river`, from RIVR — Requirements, Implementation, Verification,
-Release.** Supersedes `reqman`, and it is a better fit for a reason worth writing down: `reqman`
-named the whole method after requirements management, which is one phase of four. RIVR names the
-lifecycle. Source: an internal presentation (`docs.google.com/presentation/d/1jGG6SiNCrDqVYv0Pp5WhxNdwkAVUUt5U1YpCf7S39Yw`),
-which an agent cannot retrieve — the rule that a human fetches what an agent cannot applies, so
-everything below is reasoned from the initialism alone and should be checked against the deck.
+Release.** Supersedes `reqman`. Hosted at `sso://user/sameer/river` (internal). `specman` gets
+archived once river is populated.
 
-To be hosted at `sso://user/sameer/river` (internal), rather than on GitHub.
+Source: `go/rivr`, read 2026-09-23 from a PDF the owner exported, since the deck itself refuses
+automated retrieval. **Marked CONFIDENTIAL — GOOGLE INTERNAL**, which has a consequence below.
+
+### ⚠ Blocking: two of the four copies are public
+
+`specman` and `birdsync` are **public GitHub repositories**. The RIVR framework comes from a
+deck marked Google-internal. Restructuring `process.md` around RIVR and propagating it as usual
+publishes internal material to a public repo.
+
+Nothing may propagate to `birdsync` until this is resolved. Three ways out, all the owner's call:
+
+1. Confirm the framework is externally publishable even though the deck is marked confidential —
+   plausible, since the marking is often a default template, but it is a clearance question.
+2. Keep river internal and **fork the lineage**: birdsync stays on the final public `specman`
+   text and stops tracking. Costs one divergent copy forever.
+3. Take birdsync private.
+
+### What the deck actually says
+
+Four stages with **continuous updates**, explicitly not waterfall, each maintaining **explicit
+artifacts in VCS that record software provenance and serve as grounding context for SDLC
+agents**. That last clause is this method's thesis almost word for word.
+
+| Stage | Does | Its dependency class |
+| --- | --- | --- |
+| **R**equirements | Compose from multiple providers, resolve conflicts, define **implementation-agnostic** acceptance criteria | Requirements providers: product, tech stack, security, compliance, accessibility, observability, branding |
+| **I**mplementation | Define **implementation-specific** acceptance criteria; update designs and code to meet all of them. Designs live alongside code, kept in sync | Build-time: agents, skills, languages, libraries, frameworks, data, tools |
+| **V**erification | Run **checkers** to evaluate criteria and **fixers** to address failures; shift both left | Toolchain: agentic and human checkers and fixers, compiler, static/dynamic analysis, tests, model checking, proof-carrying code |
+| **R**elease | Qualify and deploy versions, run A/B experiments, manage runtime deps, report issues back into R and I | Runtime: services, configuration, data, tools, agents, skills |
+
+Each stage carries **its own version series** — the deck shows requirements at `v1.x`,
+verification at `v3.x`, release at `v456+`. And dependency management is cross-cutting: every
+stage must select trustworthy dependencies, keep them updated, remediate vulnerabilities,
+resolve conflicts and handle breaking changes.
+
+### Where the method already matches
+
+- **Requirements management is described exactly as this method implements it** — compose from
+  providers, resolve conflicts. `sources.md`, tiers and `decisions.md` need no change.
+- **`acceptance.md`'s `level: spec | code` field already encodes RIVR's R/I split.**
+  Implementation-agnostic criteria are `spec`-level; implementation-specific are `code`-level.
+  The distinction exists and is unnamed; RIVR names it.
+- **Provenance artifacts in VCS as agent grounding context** is the `Why` section's thesis.
+
+### Where it does not — the real work
+
+| Gap | Size |
+| --- | --- |
+| **Release is entirely absent.** `implements.md` records conformance at a tag and stops. No qualification, deployment, A/B experiments, runtime dependency management, or feedback path from release back into requirements | A whole stage |
+| **Fixers.** The method has checkers and no notion of a fixer. RIVR pairs them at every stage | New concept |
+| **Four version series, not two.** Decoupling split spec from code. RIVR versions requirements, verification and release independently — verification having its own line is the surprising one | Generalizes an existing amendment |
+| **Dependency management is requirements-only here.** Sources are pinned, vendored and hashed; build-time, toolchain and runtime dependencies get nothing. `mcp`'s "Integrity: via package-lock.json" is the only toe in that water | Broadens the pin machinery threefold |
+| **Designs are "descriptive" here, "kept in sync" there.** `arch.md` says the code wins. RIVR says designs and code are maintained together as grounding context — a stronger, bidirectional claim | Changes an artifact's nature |
+
+### Terminology to consider adopting
+
+- **"Requirements providers"** for what this method calls *sources*. The deck's list — product,
+  tech stack, security, compliance, accessibility, observability, branding — maps almost exactly
+  onto gemini-cli's `sources.md`.
+- But note RIVR makes **no distinction between local and external providers**: product and tech
+  stack sit in the same list as compliance and branding. This method splits them —
+  `product.md`/`tech.md` are local artifacts, everything else is `sources.md`. Worth deciding
+  which framing is right before the rename hardens the current one.
 
 ### RIVR maps onto the artifacts better than the current loop does
 
@@ -692,10 +751,11 @@ Options, none yet chosen:
 
 | Option | For | Against |
 | --- | --- | --- |
-| Keep `spec/` | Zero churn across four repos; every path, criterion and binding keeps working | Names the bundle after one artifact it does not contain — there is no `spec.md` — and keeps a word the method is moving away from |
-| `river/` | Self-describing, matches the project and the repo; a reader who knows the method knows the directory | Names a directory after a tool, which ages badly if the method is ever renamed again |
-| `rivr/` | Same, and unmistakably the initialism | Harder to read, easy to typo, and gains nothing over `river/` |
-| `reqs/` | Previously agreed | **Now actively wrong under RIVR** |
+| Keep `spec/` | Zero churn across four repos; every path, criterion and binding keeps working | "Spec" is not a River word at all — it appears nowhere in the model — and the bundle contains no `spec.md` |
+| `river/` | Self-describing, matches project and repo, holds all four stages without privileging one | Names a directory after a tool, which ages badly if renamed again |
+| `rivr/` | Unmistakably the initialism | Harder to read, easy to typo, no gain over `river/` |
+| Four stage directories | Faithful to the deck, which says artifacts are maintained **per stage** | A large restructure, and today's artifacts do not cleanly partition — `sources.md` is R, `acceptance.md` straddles R and I |
+| `reqs/` | Previously agreed | **Now actively wrong** — requirements are one stage of four |
 
 Cost is the same whichever non-`spec` option wins: it touches four project copies, every path in
 every check (`check-pins.py`, `check-quotations.py`, `check-contrast.py`, `check-goals.py`,
