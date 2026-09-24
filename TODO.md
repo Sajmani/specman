@@ -17,7 +17,11 @@ pick up on another machine by cloning. Work spans eight repositories, all with r
 | `goals` | `sso://user/sameer/goals` (internal) | 2021 Graphviz goal-graph explorer. Relevant to task 3 — see below |
 
 **Tasks 1 and 3 are done.** Task 4's changes are made but **await your manual review** — it is
-not done until you have read the simplified `process.md`. Task 7's research has had two passes,
+not done until you have read the simplified `process.md`.
+
+**Agreed sequence from here:** (1) your review of the simplified process; (2) migrate to the
+`river` repo at `sso://user/sameer/river` and archive `specman`; (3) update the three consumer
+copies — gemini-cli, birdsync, birdview — to use river. Nothing starts until the review lands. Task 7's research has had two passes,
 and the project is being renamed **`river`** (RIVR: Requirements, Implementation, Verification,
 Release), to be hosted internally at `sso://user/sameer/river`.
 
