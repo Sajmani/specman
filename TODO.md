@@ -2,24 +2,36 @@
 
 ## Resuming — read this first
 
-Updated 2026-08-27, end of session. **Everything is committed and pushed** — this is safe to
-pick up on another machine by cloning. Work spans seven repositories, all with remotes.
+Updated 2026-09-23. **Everything is committed and pushed** — this is safe to
+pick up on another machine by cloning. Work spans eight repositories, all with remotes.
 
 | Repo | Remote | State |
 | --- | --- | --- |
-| `specman` | `github.com/Sajmani/specman` (public) | The method. `process.md` at pin `fe276283`, nine amendments landed, simplification pass done |
+| `specman` | `github.com/Sajmani/specman` (public) | The method. `process.md` at pin `63bfdecb`, nine amendments landed, simplification pass done |
 | `gemini-cli` | **`backup` →** `github.com/Sajmani/gemini-cli` (private) | Branch **`spec-adoption`**. `origin` is Google's repo — do not push there. Nothing staged |
-| `birdsync` | `github.com/Sajmani/birdsync` (public) | Synced to `fe276283` + banner; carries a `specman` manifest entry |
+| `birdsync` | `github.com/Sajmani/birdsync` (public) | Synced to `63bfdecb` + banner; carries a `specman` manifest entry |
 | `org-sec` | `github.com/Sajmani/org-sec` (private) | Example: spec-only repo. Tags `v1.0` `v1.1` `v1.2`; `v1.2` added `goals.md` |
 | `server-framework` | `github.com/Sajmani/server-framework` (private) | Example: framework. Tags `v1.10` `v1.11` predate the stale-pin fix on `main` |
 | `greeter` | `github.com/Sajmani/greeter` (private) | Example: the app. Tags `v1.20` `v1.21` predate `acceptance.md` |
+| `birdview` | `sso://user/sameer/birdview` (internal) | **Third adopter.** Full bundle incl. `goals.md`, 53 requirements, three checks under `spec/check/` |
 | `goals` | `sso://user/sameer/goals` (internal) | 2021 Graphviz goal-graph explorer. Relevant to task 3 — see below |
 
-**Tasks 1, 3 and 4 are done**, and task 7's research has had two passes. Canonical is at pin
-`fe276283` with **nothing staged anywhere** — both project copies differ from it by exactly their
-banner. **Next action is task 5** (take the revised method back to birdsync), which is also the
-first real test of amendment 5, the only one that landed without evidence. Task 2's remaining
-work is the OTel layering question.
+**Tasks 1 and 3 are done.** Task 4's changes are made but **await your manual review** — it is
+not done until you have read the simplified `process.md`. Task 7's research has had two passes,
+and the project is being renamed **`river`** (RIVR: Requirements, Implementation, Verification,
+Release), to be hosted internally at `sso://user/sameer/river`.
+
+Canonical is at pin `63bfdecb` with **nothing staged anywhere**; all three project copies differ
+from it by exactly their banner. **Next actions:** your review of task 4, then task 5 — which is
+now propagation to *three* copies, and has already surfaced three divergent conventions between
+them.
+
+**A correction worth knowing about.** Every date this session wrote was wrong: `2026-08-27` was
+inferred from the previous session's "paused 2026-08-26" instead of read from the system clock.
+The real dates, from git, are 2026-09-04, 09-08, 09-09, 09-20 and 09-23. Nine revision rows, four
+base pins, `CR-002`, two `PROVENANCE.md` files and this plan all carried the wrong date and have
+been corrected. Nothing checked it, which is the point: the method requires dated provenance
+everywhere and has no criterion that a date is plausible.
 
 Task 3 landed as structure only: `goals.md`, a `Goals:` field, and a coverage check. Its main
 finding is a correction — goals are OKR *objectives*, so they are unmeasurable by construction
@@ -35,14 +47,20 @@ Two things a new machine should know that are not in any repo:
   guide**, and **Gotel & Finkelstein 1994**. The CMMI findings came from process-area summaries,
   not the SEI technical report — verify before quoting as normative.
 
-**The canonical pin is `sha256:fe276283…`.** Two project copies record it. A project copy is
+**The canonical pin is `sha256:63bfdecb…`.** Two project copies record it. A project copy is
 never byte-identical to canonical — it carries a banner — so the check is that the diff contains
 *the banner and nothing else but `[LOCAL]` rows* — and right now there are no `[LOCAL]` rows:
 
 ```bash
 diff -u process.md ../gemini-cli/spec/process.md   # banner only
 diff -u process.md ../birdsync/spec/process.md     # banner only
+diff -u process.md ../birdview/spec/process.md     # banner only (HTML comment form)
 ```
+
+**Three copies now, and three different banner forms.** gemini-cli and birdsync use a
+blockquote; birdview uses an HTML comment so the banner does not render. Amendment 5 said "a
+short banner" and did not specify a form, so this is the amendment being tested and finding its
+first ambiguity. Settle it in task 5.
 
 **Three things a fresh session will not otherwise know:**
 
@@ -75,14 +93,14 @@ in `gemini-cli/spec/TODO.md`; the largest is four sources named but never retrie
 ```
 
 Sessions of record for provenance: `ses_fc5410b4effe1MMYZpTO63UgOz` (2026-08-25/26, the
-adoption and the worked example) and `ses_e5fbd2501adffec0u7ckMN5M7V` (2026-08-27, task 1 and
+adoption and the worked example) and `ses_e5fbd2501adffec0u7ckMN5M7V` (2026-09-20, task 1 and
 the stale-pin fix, the reqman/RM research, and the agent-versus-human division in `Why`). The
 `grill-me` skill exists now, and task 3 is the one that most needs it.
 
 Working plan for evolving the method. Tasks are ordered by dependency: each one's output is the
 next one's input.
 
-## 1. Land the pending amendments from gemini-cli — **DONE 2026-08-27**
+## 1. Land the pending amendments from gemini-cli — **DONE 2026-09-04**
 
 Five amendments are in canonical. The four staged in gemini-cli were upstreamed with their
 `[LOCAL]` markers dropped, re-dated to the landing date, and each given an explicit
@@ -321,7 +339,7 @@ obvious candidate, and it would sit in the same place the PII one does.
 - Whether an external product spec (`org-sec`) really belongs in `spec/sources/` alongside
   vendored rules documents. **The "it worked without friction" evidence was wrong** — the first
   refresh silently broke the pin in two files and went unnoticed for a week, because the example
-  had no `acceptance.md` to hold the meta-criterion. Fixed 2026-08-27; see task 1. The question
+  had no `acceptance.md` to hold the meta-criterion. Fixed 2026-09-04; see task 1. The question
   itself is still open, but it now has a discriminator: what belongs in `spec/sources/` is what
   is *not edited in place*.
 - The staleness bound on a conformance record. `process.md` requires one; neither `implements.md`
@@ -331,7 +349,7 @@ obvious candidate, and it would sit in the same place the PII one does.
   v1.0/v1.1 rot lived in a paragraph. Whether this is fixable or just a known limit is worth a
   paragraph in the method.
 
-## 3. Goals: why a requirement exists — **DONE 2026-08-27** (structure), criteria deferred
+## 3. Goals: why a requirement exists — **DONE 2026-09-20** (structure), criteria deferred
 
 Built as `goals.md` plus a `Goals:` field, staged as a `[LOCAL]` amendment in gemini-cli and
 exercised in `org-sec v1.2`. What landed, and what the design settled:
@@ -430,7 +448,7 @@ What this unlocks, and what has to be worked out:
 
 ### Goals are what validation validates against
 
-**Added 2026-08-27, and it gives this task a job rather than a genre.** CMMI separates
+**Added 2026-09-08, and it gives this task a job rather than a genre.** CMMI separates
 verification from validation: VER ensures "work products meet their specified requirements", VAL
 demonstrates the product "fulfills its intended use when placed in its intended environment".
 Every criterion this method writes is verification. Nothing validates.
@@ -498,10 +516,11 @@ question stops being about layering and becomes about which Goal the format serv
 Do this **before** task 4, since it introduces a concept and the simplification pass judges
 whether concepts earn their keep.
 
-## 4. Simplification pass — **DONE 2026-08-27**, with deletion candidates left for you
+## 4. Simplification pass — **CHANGES MADE, AWAITING YOUR REVIEW**
 
-Ran after landing the three staged amendments, so there was one text to simplify rather than a
-moving base. **Nothing is staged in any project copy now**; both differ from canonical by exactly
+**Not done until you have read the simplified `process.md` yourself.** The changes below are
+made and committed; what is missing is the judgment that they improved it. Ran after landing the
+three staged amendments, so there was one text to simplify rather than a moving base. **Nothing is staged in any project copy now**; both differ from canonical by exactly
 their banner.
 
 What the pass actually found, which was not what the task predicted:
@@ -555,13 +574,32 @@ simplification pass is the wrong place to do that.
 Do this **after** tasks 2 and 3, so the vocabulary those settle can simplify the text rather than
 adding another layer to it.
 
-## 5. Take the revised method back to birdsync
+## 5. Propagate to birdsync and birdview
+
+**Three copies to keep in step now, not one.** `birdview` adopted the method around 2026-09-20
+and is already the most advanced consumer of the newest amendment: it has a `goals.md` with four
+goals, 53 requirements citing them, and three checks under `spec/check/`. Any canonical change
+has to reach all three copies, and the propagation step is now the most-repeated manual operation
+in this whole method — a candidate for automation before it is a candidate for discipline.
+
+What birdview already reveals, for free:
+
+| Divergence | gemini-cli / birdsync | birdview |
+| --- | --- | --- |
+| Banner form | Blockquote, renders | HTML comment, does not render |
+| Goal ID form | `G1` (org-sec) | `G-001` |
+| Check location | `spec/check-*.py` | `spec/check/*.py` |
+
+None is wrong; the method never said. Each is a place where three adopters independently chose
+differently, which is exactly the evidence a convention needs before it is fixed.
+
+### Original: take the revised method back to birdsync
 
 birdsync has the most mature bundle — `product.md`, `tech.md`, `acceptance.md`, `decisions.md`
 with twelve resolved conflicts, `arch.md`, and vendored sources. It is the best test of whether
 a change to the method survives contact with a project that already followed the old one.
 
-Its `process.md` was re-synced on 2026-08-27 and is now canonical plus the banner, with a
+Its `process.md` was re-synced on 2026-09-20 and is now canonical plus the banner, with a
 `specman` entry and base pin added to `sources.md`. This refresh is what will exercise amendment
 5, the only one that landed without evidence.
 
@@ -616,7 +654,77 @@ To work out:
 - How this lands in the bundle: a dated migration plan that lets `CR-001` expire against
   something real, rather than a risk acceptance renewed indefinitely.
 
-## 7. Rename to `reqman`, and locate the method in Requirements Management
+## 7. Rename to `river`, and locate the method in Requirements Management
+
+**Name changed 2026-09-23: `river`, from RIVR — Requirements, Implementation, Verification,
+Release.** Supersedes `reqman`, and it is a better fit for a reason worth writing down: `reqman`
+named the whole method after requirements management, which is one phase of four. RIVR names the
+lifecycle. Source: an internal presentation (`docs.google.com/presentation/d/1jGG6SiNCrDqVYv0Pp5WhxNdwkAVUUt5U1YpCf7S39Yw`),
+which an agent cannot retrieve — the rule that a human fetches what an agent cannot applies, so
+everything below is reasoned from the initialism alone and should be checked against the deck.
+
+To be hosted at `sso://user/sameer/river` (internal), rather than on GitHub.
+
+### RIVR maps onto the artifacts better than the current loop does
+
+This is the part worth checking against the deck, because if it holds it reorganizes more than
+the name:
+
+| RIVR phase | Artifacts today |
+| --- | --- |
+| **R**equirements | `goals.md`, `product.md`, `tech.md`, `sources.md`, `decisions.md` |
+| **I**mplementation | `arch.md`, and the code |
+| **V**erification | `acceptance.md` and the criteria |
+| **R**elease | `implements.md`, spec tags, conformance claims |
+
+The current loop is `context2spec → spec2test → spec2code`, three phases whose names all embed
+"spec". RIVR is four phases and covers Release, which the loop never names even though
+`implements.md` and the whole decoupling section are about exactly that. If the mapping holds,
+RIVR is a better spine and the phase names should change with the project name.
+
+### The directory question — **open, and the answer changed**
+
+Previously agreed: `spec/` → `reqs/`. **RIVR makes `reqs/` wrong**, for the same reason it makes
+`reqman` wrong — requirements are one phase of four, and the directory holds all four. Naming the
+bundle `reqs/` would repeat the mistake the rename is fixing.
+
+Options, none yet chosen:
+
+| Option | For | Against |
+| --- | --- | --- |
+| Keep `spec/` | Zero churn across four repos; every path, criterion and binding keeps working | Names the bundle after one artifact it does not contain — there is no `spec.md` — and keeps a word the method is moving away from |
+| `river/` | Self-describing, matches the project and the repo; a reader who knows the method knows the directory | Names a directory after a tool, which ages badly if the method is ever renamed again |
+| `rivr/` | Same, and unmistakably the initialism | Harder to read, easy to typo, and gains nothing over `river/` |
+| `reqs/` | Previously agreed | **Now actively wrong under RIVR** |
+
+Cost is the same whichever non-`spec` option wins: it touches four project copies, every path in
+every check (`check-pins.py`, `check-quotations.py`, `check-contrast.py`, `check-goals.py`,
+birdview's three, `spec_test.go`'s constants), both `.prettierignore` entries, `GEMINI.md`, and
+the banner link in three copies. **It is also the one part that changes canonical's text and so
+the base pin**, requiring a re-pin of all three copies afterwards.
+
+My reading: `spec/` is the weakest option on accuracy and the strongest on cost, and cost is
+falling — the propagation is scripted now. But it is a naming decision with no technical
+forcing function, so it is yours.
+
+### The rename mechanics
+
+The rest is small, because **canonical `process.md` never names itself** — zero occurrences. The
+pin does not change for the name alone; only the directory rename moves it.
+
+| Where | Note |
+| --- | --- |
+| `README.md`, `SKILL.md`, `TODO.md` | `SKILL.md` needs its `name:` and its trigger description reworded |
+| `gemini-cli`, `birdsync`, `birdview` `sources.md` | The source entry name, its heading, and the origin URL |
+| Three copies' banners | Canonical URL and the anchor each links to |
+| Skill registration | Registered by directory path; renaming de-registers it until re-installed |
+
+**The origin URL moves from GitHub to `sso://`, which is not a redirect.** Renaming a GitHub repo
+leaves one; moving hosts does not. Every provenance record naming
+`github.com/Sajmani/specman` has to be updated, and the old GitHub repo should say where the
+method went rather than being deleted.
+
+### Original notes, from when this was `reqman`
 
 Two halves. The second should probably run **before task 3**, because Requirements Management is
 a discipline with fifty years of vocabulary and it may already have a name and a shape for what
@@ -624,7 +732,7 @@ task 3 is about to invent from scratch.
 
 ### The framing that governs this task
 
-**The goal is utility, not novelty.** Stated by the owner on 2026-08-27, and it corrects the axis
+**The goal is utility, not novelty.** Stated by the owner on 2026-09-08, and it corrects the axis
 this task was first written on — an earlier draft sorted findings into "aligned" and "different",
 and kept score on what could be claimed as new. That is the wrong question.
 
@@ -702,10 +810,10 @@ Also worth settling: CMMI splits RD from REQM. `context2spec` looks like RD and 
 it looks like REQM. If that mapping holds it is a better spine for the phases than the current
 three-part loop, and it comes with existing literature attached.
 
-#### First pass, 2026-08-27: does RM cover versioned external sources?
+#### First pass, 2026-09-08: does RM cover versioned external sources?
 
 **Yes — more than expected, and it has names for things this method invented independently.**
-Checked against the Requirements traceability and Traceability matrix articles, both read in
+Checked 2026-09-08 against the Requirements traceability and Traceability matrix articles, both read in
 full. Terms worth searching on later: *baseline*, *surrogate requirement*, *suspect link*,
 *pre-requirements traceability*, *requirements traceability matrix (RTM)*.
 
@@ -715,7 +823,7 @@ Four concepts map almost directly:
 | --- | --- |
 | **Baseline** — an immutable approved snapshot; an RTM correlates "any two *baselined documents*", so that "when an item is changed in one baselined document, it is easy to see what needs to be changed in the other" | A spec tag, and a source pin in `PROVENANCE.md` |
 | **Surrogate requirement** — RM tools import an external artifact so it can be traced with the tool's own machinery | Vendoring a source into `sources/<name>/` and transcribing it to `<name>/R#` |
-| **Outdated surrogates** — named explicitly as the risk that the imported copy drifts from its origin | Exactly the stale `org-sec` pin fixed on 2026-08-27, and the reason `AC-M1` exists |
+| **Outdated surrogates** — named explicitly as the risk that the imported copy drifts from its origin | Exactly the stale `org-sec` pin fixed on 2026-09-20, and the reason `AC-M1` exists |
 | **Suspect link** — when an upstream item changes, downstream links are flagged for re-verification | The framework's coverage check going red when `org-sec` moved to v1.1 |
 
 External sources are squarely in scope for RM: traceability is *prescribed* by DO-178C, ISO
@@ -751,7 +859,7 @@ Still open after this pass: whether RM has any notion of a source that is *imple
 than merely complied with — the `org-sec` case from task 2 — and whether ISO/IEC/IEEE 29148
 covers imported requirements more directly than the traceability literature does.
 
-#### Second pass, 2026-08-27: CMMI REQM is a closer fit than the overview suggested
+#### Second pass, 2026-09-08: CMMI REQM is a closer fit than the overview suggested
 
 Read the CMMI process-area definitions. **REQM has exactly five specific practices, and four of
 them already exist here under other names.** This is the best available spine for describing
@@ -818,7 +926,7 @@ Two practical notes. Renaming the GitHub repository leaves a redirect, so
 but they should still be updated, since a redirect is not a record. And the skill is registered
 by directory path, so renaming the directory de-registers it until it is re-installed.
 
-**The artifact directory becomes `reqs/`.** Decided 2026-08-27, reversing the "leave it" default
+**The artifact directory becomes `reqs/`.** Decided 2026-09-08, reversing the "leave it" default
 recorded earlier the same day. `spec/` names the wrong thing once the method is called reqman —
 and it was already the wrong name, since the directory holds sources, decisions, criteria and
 conformance records, not a specification.
