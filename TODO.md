@@ -9,8 +9,8 @@ pick up on another machine by cloning. Work spans seven repositories, all with r
 | --- | --- | --- |
 | `specman` | `github.com/Sajmani/specman` (public) | The method. `process.md` at pin `fe276283`, nine amendments landed, simplification pass done |
 | `gemini-cli` | **`backup` →** `github.com/Sajmani/gemini-cli` (private) | Branch **`spec-adoption`**. `origin` is Google's repo — do not push there. Nothing staged |
-| `birdsync` | `github.com/Sajmani/birdsync` (public) | Synced to `a1325d53` + banner; carries a `specman` manifest entry |
-| `org-sec` | `github.com/Sajmani/org-sec` (private) | Example: spec-only repo. Tags `v1.0` `v1.1` |
+| `birdsync` | `github.com/Sajmani/birdsync` (public) | Synced to `fe276283` + banner; carries a `specman` manifest entry |
+| `org-sec` | `github.com/Sajmani/org-sec` (private) | Example: spec-only repo. Tags `v1.0` `v1.1` `v1.2`; `v1.2` added `goals.md` |
 | `server-framework` | `github.com/Sajmani/server-framework` (private) | Example: framework. Tags `v1.10` `v1.11` predate the stale-pin fix on `main` |
 | `greeter` | `github.com/Sajmani/greeter` (private) | Example: the app. Tags `v1.20` `v1.21` predate `acceptance.md` |
 | `goals` | `sso://user/sameer/goals` (internal) | 2021 Graphviz goal-graph explorer. Relevant to task 3 — see below |
@@ -37,7 +37,7 @@ Two things a new machine should know that are not in any repo:
 
 **The canonical pin is `sha256:fe276283…`.** Two project copies record it. A project copy is
 never byte-identical to canonical — it carries a banner — so the check is that the diff contains
-*the banner and nothing else but `[LOCAL]` rows*:
+*the banner and nothing else but `[LOCAL]` rows* — and right now there are no `[LOCAL]` rows:
 
 ```bash
 diff -u process.md ../gemini-cli/spec/process.md   # banner only
@@ -58,7 +58,7 @@ diff -u process.md ../birdsync/spec/process.md     # banner only
 **The gemini-cli blocking item is closed.** `CR-001` waited two days on an expiry and a review
 date that turned out to be unfillable: a risk acceptance asserts a choice, and this adoption can
 neither fix gemini-cli's themes nor accept the risk for its users. `CR-002` supersedes it with
-*adopted, measured, not actionable here*, and a **sixth `[LOCAL]` amendment is now staged** — a
+*adopted, measured, not actionable here*, and produced an amendment now landed in canonical: a
 third exit from an unsatisfiable mandatory requirement, for an adopter with no authority to act.
 That was the second occurrence `sources.md` had been waiting for. Remaining gemini-cli items are
 in `gemini-cli/spec/TODO.md`; the largest is four sources named but never retrieved.
