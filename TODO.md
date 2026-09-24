@@ -663,19 +663,14 @@ archived once river is populated.
 Source: `go/rivr`, read 2026-09-23 from a PDF the owner exported, since the deck itself refuses
 automated retrieval. **Marked CONFIDENTIAL — GOOGLE INTERNAL**, which has a consequence below.
 
-### ⚠ Blocking: two of the four copies are public
+### Publication: resolved 2026-09-23
 
-`specman` and `birdsync` are **public GitHub repositories**. The RIVR framework comes from a
-deck marked Google-internal. Restructuring `process.md` around RIVR and propagating it as usual
-publishes internal material to a public repo.
+**The River process may go into public GitHub repos; River *development* stays internal.** So
+`process.md` propagates to `birdsync` and `specman` as before, while the `river` repository
+itself, the deck and the design work live at `sso://user/sameer/river`. Nothing is blocked.
 
-Nothing may propagate to `birdsync` until this is resolved. Three ways out, all the owner's call:
-
-1. Confirm the framework is externally publishable even though the deck is marked confidential —
-   plausible, since the marking is often a default template, but it is a clearance question.
-2. Keep river internal and **fork the lineage**: birdsync stays on the final public `specman`
-   text and stops tracking. Costs one divergent copy forever.
-3. Take birdsync private.
+The line to hold: published artifacts carry the method, not the internal reasoning about it.
+This plan file is part of the reasoning and should move to the internal repo with it.
 
 ### What the deck actually says
 
@@ -690,10 +685,24 @@ agents**. That last clause is this method's thesis almost word for word.
 | **V**erification | Run **checkers** to evaluate criteria and **fixers** to address failures; shift both left | Toolchain: agentic and human checkers and fixers, compiler, static/dynamic analysis, tests, model checking, proof-carrying code |
 | **R**elease | Qualify and deploy versions, run A/B experiments, manage runtime deps, report issues back into R and I | Runtime: services, configuration, data, tools, agents, skills |
 
-Each stage carries **its own version series** — the deck shows requirements at `v1.x`,
-verification at `v3.x`, release at `v456+`. And dependency management is cross-cutting: every
-stage must select trustworthy dependencies, keep them updated, remediate vulnerabilities,
-resolve conflicts and handle breaking changes.
+**Versions — corrected by the author 2026-09-23, and the deck is being revised.** The slide reads
+as though verification has its own version line. It does not. Those numbers are *implementations
+that have passed verification and may proceed to release*. The real model is three series and a
+gate:
+
+| | |
+| --- | --- |
+| **Requirements** `v1.x` | Its own series, and it **evolves ahead of the implementation** |
+| **Implementation** | Designs and code as **one thing**, versioned together |
+| **Verification** | **Not a series — a gate.** It qualifies an implementation version for release |
+| **Release** `v456+` | Its own series, and it **follows from** qualified implementations |
+
+That maps onto the decoupling amendment better than the four-series reading did: a spec tag is
+the requirements version, the code is the implementation, `implements.md` is the verification
+record. Only release is missing.
+
+Dependency management is cross-cutting: every stage must select trustworthy dependencies, keep
+them updated, remediate vulnerabilities, resolve conflicts and handle breaking changes.
 
 ### Where the method already matches
 
@@ -712,7 +721,40 @@ resolve conflicts and handle breaking changes.
 | **Fixers.** The method has checkers and no notion of a fixer. RIVR pairs them at every stage | New concept |
 | **Four version series, not two.** Decoupling split spec from code. RIVR versions requirements, verification and release independently — verification having its own line is the surprising one | Generalizes an existing amendment |
 | **Dependency management is requirements-only here.** Sources are pinned, vendored and hashed; build-time, toolchain and runtime dependencies get nothing. `mcp`'s "Integrity: via package-lock.json" is the only toe in that water | Broadens the pin machinery threefold |
-| **Designs are "descriptive" here, "kept in sync" there.** `arch.md` says the code wins. RIVR says designs and code are maintained together as grounding context — a stronger, bidirectional claim | Changes an artifact's nature |
+| **`arch.md` needs a fourth nature.** See below — this is the structural change, not a wording one | Changes the artifact model |
+
+### The structural change: requirements evolve ahead, designs sync with code
+
+Confirmed by the author 2026-09-23, and it cuts through the current artifact model.
+
+Two kinds of technical writing are currently muddled together:
+
+| | Evolves **ahead of** the implementation | **Synced with** the code |
+| --- | --- | --- |
+| Artifact | `product.md`, `tech.md` — product and technical *requirements* | `arch.md` — technical *designs* |
+| RIVR stage | Requirements | Implementation |
+| Today's nature | Normative | **Descriptive** — and this is wrong |
+
+`process.md` currently says a descriptive file that disagrees with the code is *the file that is
+wrong*, so `arch.md` can only ever trail. River says designs and code are **one implementation in
+two representations**, kept in sync, with the design serving as grounding context for agents
+generating the code. A design that only ever trails cannot ground anything.
+
+So the artifact model needs a fourth nature alongside normative, descriptive and historical:
+
+> **Synced.** The artifact and the code are one thing in two representations. Disagreement is a
+> defect in whichever is stale, not automatically in the document, and the design may lead —
+> that is what makes it usable as grounding context rather than as a record.
+
+Two consequences to work out:
+
+- **`tech.md` is doing two jobs.** In birdview it is `T-001`–`T-020`, genuine technical
+  requirements that evolve ahead. In birdsync it also carries project bindings — build commands,
+  standing checks, CI — which are facts about the toolchain, not requirements. The R/I split cuts
+  straight through the file. Either bindings move, or `tech.md` is explicitly two sections with
+  different natures.
+- **What enforces the sync?** "Kept in sync" is a claim with no criterion behind it, which is the
+  same shape as a goal with no coverage check. Whatever that check is, it is the interesting part.
 
 ### Terminology to consider adopting
 
