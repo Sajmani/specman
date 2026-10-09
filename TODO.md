@@ -658,7 +658,38 @@ To work out:
 - How this lands in the bundle: a dated migration plan that lets `CR-001` expire against
   something real, rather than a risk acceptance renewed indefinitely.
 
-## 7. Rename to `river`, and locate the method in Requirements Management
+## 7. River — two tracks, 2026-10-09
+
+**Track A: field vocabulary.** Colleagues want to share the River model with the sales field and
+customers to shape conversations about *software factories*. The purpose is a shared vocabulary
+— what is new, what is familiar, and why acceptance criteria as guardrails and gates are what
+keep changes from breaking things. Detail in the `river-critique` and `river-staging-plan`
+artifacts from this session.
+
+Done so far: a **What's familiar / What's new** pair of slides, generated to
+`river-familiar-new.pptx` for import into the deck. Open for the owner: the **Guardrail**
+definition, which carries the core message and is currently the deck's most confused term.
+
+**Track B: prototype — resolved 2026-10-09.** `birdview` is being open-sourced as
+`github.com/google/birdview` and deployed to **birdview.site**. That settles the blocker the
+staging plan called B0, and it settles it better than any option on the table: a live public
+site makes Release and Experimentation *demonstrable* rather than theoretical, which neither
+birdsync nor an internal repo could do.
+
+Consequences to carry into the migration:
+
+- birdview stops being internal, so its `sso://` provenance records and the internal
+  `goals.md`/`process.md` lineage need rewriting for a public audience before the move.
+- It becomes the reference implementation, so whatever shape its `spec/` takes is the shape
+  customers will copy. The `spec/` versus `river/` directory question stops being cosmetic.
+- Release acceptance criteria become real for the first time — rollout policy, telemetry,
+  uptime for a live site — and those are exactly the criteria none of the three existing
+  adopters has ever written.
+
+**Not customer-facing:** the gemini-cli findings. 44 measured WCAG contrast failures in a
+shipping Google product is good internal evidence and a liability in a sales deck.
+
+### Original: rename to `river`, and locate the method in Requirements Management
 
 **Name changed 2026-09-23: `river`, from RIVR — Requirements, Implementation, Verification,
 Release.** Supersedes `reqman`. Hosted at `sso://user/sameer/river` (internal). `specman` gets
