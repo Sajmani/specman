@@ -670,6 +670,20 @@ Done so far: a **What's familiar / What's new** pair of slides, generated to
 `river-familiar-new.pptx` for import into the deck. Open for the owner: the **Guardrail**
 definition, which carries the core message and is currently the deck's most confused term.
 
+### Layout decisions, 2026-10-09
+
+- `arch.md` moves to `designs/`. The R/I boundary becomes physical rather than a `Nature:` field.
+- `product.md` and `tech.md` become **local sources**, not composition outputs. Composition then
+  produces a **requirements version** — which is specman's "resolved set", a concept it names
+  three times and never gives a file.
+- A requirements version is the method's **first derived artifact**, so it records a hash for
+  every input it was composed from. Same failure shape as the stale pin, same answer.
+- Composed versions are **immutable once tagged** and live in `requirements/versions/`.
+- `goals.md` sits at `river/`, **not** under `requirements/` — it is cross-stage. Requirements
+  serve goals, Gradients measure progress toward them, Experimentation measures impact on them.
+  Three of four stages.
+- **The anchor is the agent instruction file, not a fixed path.** See below.
+
 **Track B: prototype — resolved 2026-10-09.** `birdview` is being open-sourced as
 `github.com/google/birdview` and deployed to **birdview.site**. That settles the blocker the
 staging plan called B0, and it settles it better than any option on the table: a live public
